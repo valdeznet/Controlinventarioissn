@@ -1,51 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using Controlinventarioissn.Data;
+﻿using Controlinventarioissn.Data;
 using Controlinventarioissn.Data.Entities;
-using System.Diagnostics.Metrics;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Controlinventarioissn.Controllers
 {
-    public class DelegacionsController : Controller
+    public class CategoriesController : Controller //con esto tenemos acceso a la base de datos
     {
         private readonly DataContext _context;
 
-        public DelegacionsController(DataContext context)
+        public CategoriesController(DataContext context)
         {
             _context = context;
         }
 
-        //*................................................................ GET: Delegacions INDEX.......................................//
         public async Task<IActionResult> Index()
         {
-              return _context.Delegaciones != null ? 
-                          View(await _context.Delegaciones.ToListAsync()) :
-                          Problem("Entity set 'DataContext.Delegaciones'  is null.");
+            return View(await _context.Categories.ToListAsync());                       
         }
-
-        //*........................................GET: Delegacions/Details/5..............................................................//
-        public async Task<IActionResult> Details(int? id) //
-        {
-            if (id == null || _context.Delegaciones == null)
-            {
-                return NotFound();
-            }
-
-            Delegacion delegacion = await _context.Delegaciones
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (delegacion == null)
-            {
-                return NotFound();
-            }
-
-            return View(delegacion);
-        }
-
         // ..........................................................GET: Delegacions/Create..............................................................//
         public IActionResult Create()
         {
@@ -53,16 +25,16 @@ namespace Controlinventarioissn.Controllers
         }
 
         //**************************************************** POST: Delegacions/Create********************************//
-   
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Delegacion delegacion)
+        public async Task<IActionResult> Create(Category category)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Add(delegacion);
+                    _context.Add(category);
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                 }
@@ -70,7 +42,7 @@ namespace Controlinventarioissn.Controllers
                 {
                     if (dbUpdateException.InnerException.Message.Contains("duplicate"))
                     {
-                        ModelState.AddModelError(string.Empty, "Ya existe una Delegación con el mismo nombre.");
+                        ModelState.AddModelError(string.Empty, "Ya existe una Categoría con el mismo nombre.");
                     }
                     else
                     {
@@ -82,35 +54,33 @@ namespace Controlinventarioissn.Controllers
                     ModelState.AddModelError(string.Empty, exception.Message);
                 }
             }
-            return View(delegacion);
+            return View(category);
 
         }
-
-
         //************************************************* GET: Delegacions/Edit/5*******************************//
 
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Delegaciones == null)
+            if (id == null || _context.Categories == null)
             {
                 return NotFound();
             }
 
-            var delegacion = await _context.Delegaciones.FindAsync(id); //FinndAsync busca por clabe primaria
-            if (delegacion == null)
+            Category category = await _context.Categories.FindAsync(id); //FinndAsync busca por clabe primaria
+            if (category == null)
             {
                 return NotFound();
             }
-            return View(delegacion);
+            return View(category);
         }
 
-       //***********************************EDIT POST*******************************************************//
+        //***********************************EDIT POST*******************************************************//
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Delegacion delegacion)
+        public async Task<IActionResult> Edit(int id, Category category)
         {
-            if (id != delegacion.Id)
+            if (id != category.Id)
             {
                 return NotFound();
             }
@@ -119,7 +89,7 @@ namespace Controlinventarioissn.Controllers
             {
                 try
                 {
-                    _context.Update(delegacion);
+                    _context.Update(category);
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                 }
@@ -127,7 +97,7 @@ namespace Controlinventarioissn.Controllers
                 {
                     if (dbUpdateException.InnerException.Message.Contains("duplicate"))
                     {
-                        ModelState.AddModelError(string.Empty, "Ya existe una Delegación con el mismo nombre.");
+                        ModelState.AddModelError(string.Empty, "Ya existe una Categoría con el mismo nombre.");
                     }
                     else
                     {
@@ -140,27 +110,44 @@ namespace Controlinventarioissn.Controllers
                 }
 
             }
-            return View(delegacion);
+            return View(category);
         }
 
+        //*........................................GET: Delegacions/Details/5..............................................................//
+        public async Task<IActionResult> Details(int? id) //
+        {
+            if (id == null || _context.Categories == null)
+            {
+                return NotFound();
+            }
+
+            Category category = await _context.Categories
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            return View(category);
+        }
 
         //********************************************* GET: Delegacions/Delete/5*********************************************//
 
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Delegaciones == null)
+            if (id == null || _context.Categories == null)
             {
                 return NotFound();
             }
 
-            var delegacion = await _context.Delegaciones
+            Category category = await _context.Categories
                 .FirstOrDefaultAsync(m => m.Id == id); //FirstOrDefaultAsync busca por todo la tabla
-            if (delegacion == null)
+            if (category == null)
             {
                 return NotFound();
             }
 
-            return View(delegacion);
+            return View(category);
         }
 
 
@@ -171,23 +158,24 @@ namespace Controlinventarioissn.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Delegaciones == null)
+            if (_context.Categories == null)
             {
-                return Problem("Entity set 'DataContext.Delegaciones'  is null.");
+                return Problem("Entity set 'DataContext.Categorías'  is null.");
             }
-            var delegacion = await _context.Delegaciones.FindAsync(id);
-            if (delegacion != null)
+            Category category = await _context.Categories.FindAsync(id);
+            if (category != null)
             {
-                _context.Delegaciones.Remove(delegacion);
+                _context.Categories.Remove(category);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool DelegacionExists(int id)
+        private bool CategoríaExists(int id)
         {
-          return (_context.Delegaciones?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Delegaciones?.Any(e => e.Id == id)).GetValueOrDefault();
         }
+
     }
 }

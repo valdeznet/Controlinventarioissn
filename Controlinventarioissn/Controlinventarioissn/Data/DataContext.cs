@@ -11,7 +11,9 @@ namespace Controlinventarioissn.Data
 
         }
 
+        public DbSet<Category> Categories { get; set; } //que quiero mapear, la categoria de los Equipamientos
         public DbSet<Delegacion> Delegaciones { get; set; } //que quiero mapear, la delegacion
+        public object Cotegories { get; internal set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
