@@ -1,43 +1,40 @@
 ﻿using Controlinventarioissn.Data;
-using Controlinventarioissn.Data.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Controlinventarioissn.Data.Entities;
 
 namespace Controlinventarioissn.Controllers
 {
-    public class CategoriesController : Controller //con esto tenemos acceso a la base de datos
+    public class DepositoController : Controller
     {
         private readonly DataContext _context;
 
-        public CategoriesController(DataContext context)
+        public DepositoController(DataContext context)
         {
             _context = context;
         }
-
-        /******************************************************INDEX*****************************************************/
-
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Categories.ToListAsync());                       
+            return View(await _context.Depositos.ToListAsync());
         }
 
-        //*********************************************GET CATEGORIAS/Create******************************************//
+        //*********************************************GET DEPOSITOS/Create******************************************//
         public IActionResult Create()
         {
             return View();
         }
 
-        //**************************************************** POST: CATEGORIAS/Create********************************//
+        //**************************************************** POST: DEPOSITOS/Create********************************//
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Category category)
+        public async Task<IActionResult> Create(Deposito deposito)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Add(category);
+                    _context.Add(deposito);
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                 }
@@ -45,7 +42,7 @@ namespace Controlinventarioissn.Controllers
                 {
                     if (dbUpdateException.InnerException.Message.Contains("duplicate"))
                     {
-                        ModelState.AddModelError(string.Empty, "Ya existe una Categoría con el mismo nombre.");
+                        ModelState.AddModelError(string.Empty, "Ya existe un Deposito con el mismo nombre.");
                     }
                     else
                     {
@@ -57,33 +54,33 @@ namespace Controlinventarioissn.Controllers
                     ModelState.AddModelError(string.Empty, exception.Message);
                 }
             }
-            return View(category);
-
+            return View(deposito);
         }
-        //************************************************* GET: EDITAR CATEGORIAS************************************//
+
+        //************************************************* GET: EDITAR DEPOSITOS************************************//
 
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Categories == null)
+            if (id == null || _context.Depositos == null)
             {
                 return NotFound();
             }
 
-            Category category = await _context.Categories.FindAsync(id); //FinndAsync busca por clabe primaria
-            if (category == null)
+            Deposito deposito = await _context.Depositos.FindAsync(id); //FinndAsync busca por clave primaria
+            if (deposito == null)
             {
                 return NotFound();
             }
-            return View(category);
+            return View(deposito);
         }
 
-        //***********************************EDIT CATEGORIAS POST*******************************************************//
+        //***********************************EDIT DEPOSITOS POST*******************************************************//
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Category category)
+        public async Task<IActionResult> Edit(int id, Deposito deposito)
         {
-            if (id != category.Id)
+            if (id != deposito.Id)
             {
                 return NotFound();
             }
@@ -92,7 +89,7 @@ namespace Controlinventarioissn.Controllers
             {
                 try
                 {
-                    _context.Update(category);
+                    _context.Update(deposito);
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                 }
@@ -100,7 +97,7 @@ namespace Controlinventarioissn.Controllers
                 {
                     if (dbUpdateException.InnerException.Message.Contains("duplicate"))
                     {
-                        ModelState.AddModelError(string.Empty, "Ya existe una Categoría con el mismo nombre.");
+                        ModelState.AddModelError(string.Empty, "Ya existe un Deposito con el mismo nombre.");
                     }
                     else
                     {
@@ -113,72 +110,71 @@ namespace Controlinventarioissn.Controllers
                 }
 
             }
-            return View(category);
+            return View(deposito);
         }
 
-        //************************************************GET: DETALLES CATEGORIAS************************************************//
+        //************************************************GET: DETALLES DEPOSITOS************************************************//
         public async Task<IActionResult> Details(int? id) //
         {
-            if (id == null || _context.Categories == null)
+            if (id == null || _context.Depositos == null)
             {
                 return NotFound();
             }
 
-            Category category = await _context.Categories
+            Deposito deposito = await _context.Depositos
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (category == null)
+            if (deposito == null)
             {
                 return NotFound();
             }
 
-            return View(category);
+            return View(deposito);
         }
 
-        //********************************************* GET: ELIMINAR CATEGORIAS*********************************************//
+        //********************************************* GET: ELIMINAR DEPOSITOS*********************************************//
 
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Categories == null)
+            if (id == null || _context.Depositos == null)
             {
                 return NotFound();
             }
 
-            Category category = await _context.Categories
+            Deposito deposito = await _context.Depositos
                 .FirstOrDefaultAsync(m => m.Id == id); //FirstOrDefaultAsync busca por todo la tabla
-            if (category == null)
+            if (deposito == null)
             {
                 return NotFound();
             }
 
-            return View(category);
+            return View(deposito);
         }
 
 
-        // ********************************************************POST: ELIMINAR CATEGORIAS****************************************//
+        // ********************************************************POST: ELIMINAR DEPOSITOS****************************************//
 
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Categories == null)
+            if (_context.Depositos == null)
             {
-                return Problem("Entity set 'DataContext.Categorías'  is null.");
+                return Problem("Entity set 'DataContext.Depositos'  is null.");
             }
-            Category category = await _context.Categories.FindAsync(id);
-            if (category != null)
+            Deposito deposito = await _context.Depositos.FindAsync(id);
+            if (deposito != null)
             {
-                _context.Categories.Remove(category);
+                _context.Depositos.Remove(deposito);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CategoríaExists(int id)
+        private bool DepositoExists(int id)
         {
-            return (_context.Delegaciones?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Depositos?.Any(e => e.Id == id)).GetValueOrDefault();
         }
-
     }
 }

@@ -20,7 +20,7 @@ namespace Controlinventarioissn.Controllers
             _context = context;
         }
 
-        //*................................................................ GET: Delegacions INDEX.......................................//
+        /******************************************************INDEX*****************************************************/
         public async Task<IActionResult> Index()
         {
               return _context.Delegaciones != null ? 
@@ -28,7 +28,7 @@ namespace Controlinventarioissn.Controllers
                           Problem("Entity set 'DataContext.Delegaciones'  is null.");
         }
 
-        //*........................................GET: Delegacions/Details/5..............................................................//
+        /******************************************************DETALLES DELEGACIONES*****************************************************/
         public async Task<IActionResult> Details(int? id) //
         {
             if (id == null || _context.Delegaciones == null)
@@ -46,7 +46,7 @@ namespace Controlinventarioissn.Controllers
             return View(delegacion);
         }
 
-        // ..........................................................GET: Delegacions/Create..............................................................//
+        /******************************************************CREAR DELEGACIONES*****************************************************/
         public IActionResult Create()
         {
             return View();
@@ -87,7 +87,7 @@ namespace Controlinventarioissn.Controllers
         }
 
 
-        //************************************************* GET: Delegacions/Edit/5*******************************//
+        //************************************************* GET: DELEGACIONES EDITAR*******************************//
 
         public async Task<IActionResult> Edit(int? id)
         {
@@ -104,7 +104,7 @@ namespace Controlinventarioissn.Controllers
             return View(delegacion);
         }
 
-       //***********************************EDIT POST*******************************************************//
+       //***********************************EDIT DELEGACIONES POST*******************************************************//
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -144,7 +144,7 @@ namespace Controlinventarioissn.Controllers
         }
 
 
-        //********************************************* GET: Delegacions/Delete/5*********************************************//
+        //********************************************* GET: ELIMINAR DELEGACIONES*********************************************//
 
         public async Task<IActionResult> Delete(int? id)
         {
@@ -164,7 +164,7 @@ namespace Controlinventarioissn.Controllers
         }
 
 
-        // ********************************************************POST: Delegacions/Delete/5****************************************//
+        // ********************************************************POST: ELIMINAR DELEGACIONES****************************************//
 
 
         [HttpPost, ActionName("Delete")]
