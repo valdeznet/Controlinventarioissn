@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Controlinventarioissn.Data;
 using Controlinventarioissn.Data.Entities;
+using System.Diagnostics.Metrics;
 
 namespace Controlinventarioissn.Controllers
 {
@@ -28,14 +29,14 @@ namespace Controlinventarioissn.Controllers
         }
 
         // GET: Delegacions/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id) //
         {
             if (id == null || _context.Delegaciones == null)
             {
                 return NotFound();
             }
 
-            var delegacion = await _context.Delegaciones
+            Delegacion delegacion = await _context.Delegaciones
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (delegacion == null)
             {
@@ -51,23 +52,43 @@ namespace Controlinventarioissn.Controllers
             return View();
         }
 
-        // POST: Delegacions/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //**************************************************** POST: Delegacions/Create********************************//
+   
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] Delegacion delegacion)
+        public async Task<IActionResult> Create(Delegacion delegacion)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(delegacion);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    _context.Add(delegacion);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (DbUpdateException dbUpdateException)
+                {
+                    if (dbUpdateException.InnerException.Message.Contains("duplicate"))
+                    {
+                        ModelState.AddModelError(string.Empty, "Ya existe una Delegación con el mismo nombre.");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, dbUpdateException.InnerException.Message);
+                    }
+                }
+                catch (Exception exception)
+                {
+                    ModelState.AddModelError(string.Empty, exception.Message);
+                }
             }
             return View(delegacion);
+
         }
 
-        // GET: Delegacions/Edit/5
+
+        //************************************************* GET: Delegacions/Edit/5*******************************//
+
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Delegaciones == null)
@@ -75,7 +96,7 @@ namespace Controlinventarioissn.Controllers
                 return NotFound();
             }
 
-            var delegacion = await _context.Delegaciones.FindAsync(id);
+            var delegacion = await _context.Delegaciones.FindAsync(id); //FinndAsync busca por clabe primaria
             if (delegacion == null)
             {
                 return NotFound();
@@ -83,12 +104,11 @@ namespace Controlinventarioissn.Controllers
             return View(delegacion);
         }
 
-        // POST: Delegacions/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+       //***********************************EDIT POST*******************************************************//
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Delegacion delegacion)
+        public async Task<IActionResult> Edit(int id, Delegacion delegacion)
         {
             if (id != delegacion.Id)
             {
@@ -101,24 +121,31 @@ namespace Controlinventarioissn.Controllers
                 {
                     _context.Update(delegacion);
                     await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (DbUpdateException dbUpdateException)
                 {
-                    if (!DelegacionExists(delegacion.Id))
+                    if (dbUpdateException.InnerException.Message.Contains("duplicate"))
                     {
-                        return NotFound();
+                        ModelState.AddModelError(string.Empty, "Ya existe una Delegación con el mismo nombre.");
                     }
                     else
                     {
-                        throw;
+                        ModelState.AddModelError(string.Empty, dbUpdateException.InnerException.Message);
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                catch (Exception exception)
+                {
+                    ModelState.AddModelError(string.Empty, exception.Message);
+                }
+
             }
             return View(delegacion);
         }
 
-        // GET: Delegacions/Delete/5
+
+        //********************************************* GET: Delegacions/Delete/5*********************************************//
+
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Delegaciones == null)
@@ -127,7 +154,7 @@ namespace Controlinventarioissn.Controllers
             }
 
             var delegacion = await _context.Delegaciones
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.Id == id); //FirstOrDefaultAsync busca por todo la tabla
             if (delegacion == null)
             {
                 return NotFound();
@@ -136,7 +163,10 @@ namespace Controlinventarioissn.Controllers
             return View(delegacion);
         }
 
-        // POST: Delegacions/Delete/5
+
+        // ********************************************************POST: Delegacions/Delete/5****************************************//
+
+
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
