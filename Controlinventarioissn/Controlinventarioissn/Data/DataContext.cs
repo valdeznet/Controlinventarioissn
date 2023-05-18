@@ -16,6 +16,12 @@ namespace Controlinventarioissn.Data
         public DbSet<Sector> Sectors { get; set; } //que quiero mapear, El Sector de Delegacion 
         public object Cotegories { get; internal set; }
 
+        public DbSet<Equipamiento> Equipamientos { get; set; }
+
+        public DbSet<EquipamientoCategory> EquipamientoCategories { get; set; }
+
+        public DbSet<EquipamientoImage> EquipamientoImages { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -23,6 +29,9 @@ namespace Controlinventarioissn.Data
             modelBuilder.Entity<Category>().HasIndex(c => c.Name).IsUnique();
             modelBuilder.Entity<Deposito>().HasIndex(c => c.Name).IsUnique();
             modelBuilder.Entity<Sector>().HasIndex("Name", "DelegacionId").IsUnique();
+            modelBuilder.Entity<Equipamiento>().HasIndex(c => c.Name).IsUnique();
+            modelBuilder.Entity<EquipamientoCategory>().HasIndex("EquipamientoId", "CategoryId").IsUnique();
+
         }
     }
 
