@@ -1,4 +1,5 @@
 using Controlinventarioissn.Data;
+using Controlinventarioissn.Helpers;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +15,8 @@ builder.Services.AddDbContext<DataContext>(o =>
 
 builder.Services.AddTransient<SeedDb>();  //inyeccion addtransient es que la voy a usar una sola vez
 //builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
+builder.Services.AddScoped<IBlobHelper, BlobHelper>();
+builder.Services.AddScoped<ICombosHelper, CombosHelper>();
 
 var app = builder.Build();
 SeedData();

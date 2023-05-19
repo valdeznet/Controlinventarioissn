@@ -29,8 +29,8 @@ namespace Controlinventarioissn.Data
             modelBuilder.Entity<Category>().HasIndex(c => c.Name).IsUnique();
             modelBuilder.Entity<Deposito>().HasIndex(c => c.Name).IsUnique();
             modelBuilder.Entity<Sector>().HasIndex("Name", "DelegacionId").IsUnique();
-            modelBuilder.Entity<Equipamiento>().HasIndex(c => c.Name).IsUnique();
-            modelBuilder.Entity<EquipamientoCategory>().HasIndex("EquipamientoId", "CategoryId").IsUnique();
+            modelBuilder.Entity<Equipamiento>().HasIndex(c => c.Name).IsUnique(); //no tengamos dos productos con el mismo nombre
+            modelBuilder.Entity<EquipamientoCategory>().HasIndex("EquipamientoId", "CategoryId").IsUnique();//el mismo producto en la misma categoria
 
         }
     }

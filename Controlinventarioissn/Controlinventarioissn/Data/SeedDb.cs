@@ -1,4 +1,5 @@
 ﻿using Controlinventarioissn.Data.Entities;
+using Controlinventarioissn.Helpers;
 using System.Diagnostics.Metrics;
 
 namespace Controlinventarioissn.Data
@@ -7,13 +8,13 @@ namespace Controlinventarioissn.Data
     {
         private readonly DataContext _context;
         //   private readonly IUserHelper _userHelper;
-        //    private readonly IBlobHelper _blobHelper;
+            private readonly IBlobHelper _blobHelper;
 
-        public SeedDb(DataContext context)
+        public SeedDb(DataContext context, IBlobHelper blobHelper)
         {
             _context = context;
             // _userHelper = userHelper;
-            //_blobHelper = blobHelper;
+            _blobHelper = blobHelper;
         }
 
         public async Task SeedAsync()
