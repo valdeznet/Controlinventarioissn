@@ -1,4 +1,5 @@
 ﻿using Controlinventarioissn.Data.Entities;
+using Controlinventarioissn.Migrations;
 using Microsoft.EntityFrameworkCore;
 
 namespace Controlinventarioissn.Data
@@ -20,6 +21,8 @@ namespace Controlinventarioissn.Data
 
         public DbSet<EquipamientoCategory> EquipamientoCategories { get; set; }
 
+        public DbSet<EquipamientoDeposito> EquipamientoDepositos { get; set; }
+
         public DbSet<EquipamientoImage> EquipamientoImages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -31,6 +34,7 @@ namespace Controlinventarioissn.Data
             modelBuilder.Entity<Sector>().HasIndex("Name", "DelegacionId").IsUnique();
             modelBuilder.Entity<Equipamiento>().HasIndex(c => c.Name).IsUnique(); //no tengamos dos productos con el mismo nombre
             modelBuilder.Entity<EquipamientoCategory>().HasIndex("EquipamientoId", "CategoryId").IsUnique();//el mismo producto en la misma categoria
+            modelBuilder.Entity<EquipamientoDeposito>().HasIndex("EquipamientoId", "DepositoId").IsUnique();
 
         }
     }

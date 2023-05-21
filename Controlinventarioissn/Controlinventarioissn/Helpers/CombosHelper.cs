@@ -49,10 +49,48 @@ namespace Controlinventarioissn.Helpers
 
             list.Insert(0, new SelectListItem { Text = "[Selecione una categoria...]", Value = "0" });
             return list;
-        } //ahora que ya esta el metodo nos toca llamar a este filtro, vamos al productcontroller
+        } //ahora que ya esta el metodo nos toca llamar a este filtro, vamos al equipamientocontroller
 
+//***************************************************************************************************************//
+        public async Task<IEnumerable<SelectListItem>> GetComboDepositosAsync()
+        {
+            List<SelectListItem> list = await _context.Depositos.Select(c => new SelectListItem
+            {
+                Text = c.Name,
+                Value = c.Id.ToString()
+            })
+                .OrderBy(c => c.Text)
+                .ToListAsync();
 
+            list.Insert(0, new SelectListItem { Text = "[Selecione un Deposito...]", Value = "0" });
+            return list;
+        }
 
+        public async Task<IEnumerable<SelectListItem>> GetComboDepositosAsync(IEnumerable<Deposito> filter)
+        {
+            List<Deposito> depositos = await _context.Depositos.ToListAsync(); //tengo mi lista de deposito
+            List<Deposito> depositosFiltered = new(); //creamos otra lista de deposito que se llama depositos filtradas
+            foreach (Deposito deposito in depositos) //ahora busca en todas los depositos que estan en el filtro
+            {
+                if (!filter.Any(d => d.Id == deposito.Id))      //por cada deposito en la lista de depositos vamos a decirle 
+                {                                               //(!FIlter , esto si NO existe en el Filtro --- si mi filtro me devuelve cualquiera, un depsoto que tenga el c.Id igual al category.Id quiere decir que existe en el filtro
+                    depositosFiltered.Add(deposito); //de esa manera si no exite adicionamos la categoria
+                }
+            }
+
+            List<SelectListItem> list = depositosFiltered.Select(d => new SelectListItem
+            {
+                Text = d.Name,
+                Value = d.Id.ToString()
+            })
+                .OrderBy(d => d.Text)
+                .ToList();
+
+            list.Insert(0, new SelectListItem { Text = "[Selecione un Deposito...]", Value = "0" });
+            return list; //ahora que ya esta el metodo nos toca llamar a este filtro, vamos al Equipamientocontroller
+        }
+
+//************************************************************************************************************************************//
         public async Task<IEnumerable<SelectListItem>> GetComboDelegacionesAsync()
         {
             List<SelectListItem> list = await _context.Delegaciones.Select(c => new SelectListItem
@@ -83,5 +121,7 @@ namespace Controlinventarioissn.Helpers
 
             return list;
         }
-	}
+
+        
+    }
 }

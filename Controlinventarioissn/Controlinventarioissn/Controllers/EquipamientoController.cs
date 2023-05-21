@@ -27,6 +27,8 @@ namespace Controlinventarioissn.Controllers
                 .Include(e => e.EquipamientoImages)
                 .Include(e => e.EquipamientoCategories)
                 .ThenInclude(ec => ec.Category)
+                .Include(e => e.EquipamientoDepositos)
+                .ThenInclude(ec => ec.Deposito)
                 .ToListAsync());
         }
 
@@ -35,6 +37,7 @@ namespace Controlinventarioissn.Controllers
             CreateEquipamientoViewModel model = new()
             {
                 Categories = await _combosHelper.GetComboCategoriesAsync(),
+                Depositos = await _combosHelper.GetComboDepositosAsync(),
             };
 
             return View(model);
@@ -67,6 +70,14 @@ namespace Controlinventarioissn.Controllers
             {
                 Category = await _context.Categories.FindAsync(model.CategoryId) //en la categoria vas a buscar en la coleccion de categorias
             }//ese id de categoria que te vino en el modelo
+        };
+                equipamiento.EquipamientoDepositos = new List<EquipamientoDeposito>() //a mi colleccion de depositos, hagale una nueva lista
+                //de equipamiento categorie
+        {
+            new EquipamientoDeposito
+            {
+                Deposito = await _context.Depositos.FindAsync(model.DepositoId) //en el depsosito vas a buscar en la coleccion de depositos
+            }//ese id de deposito que te vino en el modelo
         };
 
                 if (imageId != Guid.Empty)
@@ -101,6 +112,7 @@ namespace Controlinventarioissn.Controllers
             }
 
             model.Categories = await _combosHelper.GetComboCategoriesAsync();
+            model.Depositos = await _combosHelper.GetComboDepositosAsync();
             return View(model);
         }
 
@@ -178,7 +190,9 @@ namespace Controlinventarioissn.Controllers
             Equipamiento equipamiento = await _context.Equipamientos
                 .Include(e => e.EquipamientoImages)
                 .Include(e => e.EquipamientoCategories)
-                .ThenInclude(pc => pc.Category)
+                .ThenInclude(ec => ec.Category)
+                .Include(e => e.EquipamientoDepositos)
+                .ThenInclude(ed => ed.Deposito)
                 .FirstOrDefaultAsync(p => p.Id == id);
             if (equipamiento == null)
             {
@@ -344,6 +358,7 @@ namespace Controlinventarioissn.Controllers
 
             Equipamiento equipamiento = await _context.Equipamientos
                 .Include(e => e.EquipamientoCategories)
+                .Include(e => e.EquipamientoDepositos)
                 .Include(e => e.EquipamientoImages)
                 .FirstOrDefaultAsync(p => p.Id == id);
             if (equipamiento == null)
@@ -360,6 +375,7 @@ namespace Controlinventarioissn.Controllers
         {
             Equipamiento equipamiento = await _context.Equipamientos
                 .Include(e => e.EquipamientoImages)
+                .Include(e => e.EquipamientoDepositos)
                 .Include(e => e.EquipamientoCategories)
                 .FirstOrDefaultAsync(p => p.Id == model.Id);
 
@@ -372,6 +388,77 @@ namespace Controlinventarioissn.Controllers
                 await _blobHelper.DeleteBlobAsync(equipamientoImage.ImageId, "equipamientos");
             }
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> AddDeposito(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            Equipamiento equipamiento = await _context.Equipamientos.FindAsync(id);
+            if (equipamiento == null)
+            {
+                return NotFound();
+            }
+
+            AddDepositoEquipamientoViewModel model = new()
+            {
+                EquipamientoId = equipamiento.Id,
+                Depositos = await _combosHelper.GetComboDepositosAsync(),
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddDeposito(AddDepositoEquipamientoViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                Equipamiento equipamiento = await _context.Equipamientos.FindAsync(model.EquipamientoId);
+                EquipamientoDeposito equipamientoDeposito = new()
+                {
+                    Deposito = await _context.Depositos.FindAsync(model.DepositoId),
+                    Equipamiento = equipamiento,
+                };
+
+                try
+                {
+                    _context.Add(equipamientoDeposito);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Details), new { Id = equipamiento.Id });
+                }
+                catch (Exception exception)
+                {
+                    ModelState.AddModelError(string.Empty, exception.Message);
+                }
+            }
+
+            model.Depositos = await _combosHelper.GetComboDepositosAsync();
+            return View(model);
+        }
+
+        public async Task<IActionResult> DeleteDeposito(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            EquipamientoDeposito equipamientoDeposito = await _context.EquipamientoDepositos
+                .Include(ed => ed.Equipamiento)
+                .FirstOrDefaultAsync(ed => ed.Id == id);
+            if (equipamientoDeposito == null)
+            {
+                return NotFound();
+            }
+
+            _context.EquipamientoDepositos.Remove(equipamientoDeposito);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Details), new { Id = equipamientoDeposito.Equipamiento.Id });
         }
     }
 }

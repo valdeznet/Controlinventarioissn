@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Controlinventarioissn.Migrations;
+using System.ComponentModel.DataAnnotations;
 
 namespace Controlinventarioissn.Data.Entities
 {
@@ -10,5 +11,7 @@ namespace Controlinventarioissn.Data.Entities
         [MaxLength(50, ErrorMessage = "El campo {0} debe tener máximo {1} caractéres.")]      //caracteres para almacenar del deposito, es necesario si no en la Base de datos se nos pone N charp+
         [Required(ErrorMessage = "El campo {0} es obligatorio")]           //que el no me deja poner un deposito sin nombre
         public string Name { get; set; }
+
+        public ICollection<EquipamientoDeposito> EquipamientoDepositos { get; set; }
     }
 }

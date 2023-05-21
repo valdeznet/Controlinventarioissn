@@ -21,6 +21,7 @@ namespace Controlinventarioissn.Data
         {
             await _context.Database.EnsureCreatedAsync();
             await CheckCategoriesAsync();
+            await CheckDepositosAsync();
             await CheckDelegacionesAsync();
         }
 
@@ -93,6 +94,19 @@ namespace Controlinventarioissn.Data
                 _context.Categories.Add(new Category { Name = "Herramientas" });
                 _context.Categories.Add(new Category { Name = "Automotriz" });
                 _context.Categories.Add(new Category { Name = "Mobiliario" });
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        private async Task CheckDepositosAsync()
+        {
+            if (!_context.Depositos.Any())
+            {
+                _context.Depositos.Add(new Deposito { Name = "SedeCentral" });
+                _context.Depositos.Add(new Deposito { Name = "Jubilaciones" });
+                _context.Depositos.Add(new Deposito { Name = "Turismo" });
+                _context.Depositos.Add(new Deposito { Name = "Derivaciones" });
+
                 await _context.SaveChangesAsync();
             }
         }

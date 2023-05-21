@@ -13,6 +13,7 @@
         <form asp-action="Create" enctype="multipart/form-data"> 
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Categories" />
+            <input type="hidden" asp-for="Depositos" />
             <partial name="_CreateEquipamiento" />
             <div class="form-group mt-2">
                 <input type="submit" value="Crear" class="btn btn-outline-primary" />

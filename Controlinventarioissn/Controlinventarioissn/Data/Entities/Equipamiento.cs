@@ -33,6 +33,11 @@ namespace Controlinventarioissn.Data.Entities
         [Display(Name = "Categorías")]
         public int CategoriesNumber => EquipamientoCategories == null ? 0 : EquipamientoCategories.Count;
 
+        public ICollection<EquipamientoDeposito> EquipamientoDepositos { get; set; }
+
+        [Display(Name = "Depositos")]
+        public int DepositosNumber => EquipamientoDepositos == null ? 0 : EquipamientoDepositos.Count;
+
         public ICollection<EquipamientoImage> EquipamientoImages { get; set; }
 
         [Display(Name = "Fotos")]
