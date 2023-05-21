@@ -60,12 +60,13 @@ namespace Controlinventarioissn.Controllers
                     Stock = model.Stock,
                 };
 
-                equipamiento.EquipamientoCategories = new List<EquipamientoCategory>()
+                equipamiento.EquipamientoCategories = new List<EquipamientoCategory>() //a mi colleccion de categorias, hagale una nueva lista
+                //de equipamiento categorie
         {
             new EquipamientoCategory
             {
-                Category = await _context.Categories.FindAsync(model.CategoryId)
-            }
+                Category = await _context.Categories.FindAsync(model.CategoryId) //en la categoria vas a buscar en la coleccion de categorias
+            }//ese id de categoria que te vino en el modelo
         };
 
                 if (imageId != Guid.Empty)
@@ -78,7 +79,7 @@ namespace Controlinventarioissn.Controllers
 
                 try
                 {
-                    _context.Add(equipamiento);
+                    _context.Add(equipamiento); //
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                 }
@@ -86,7 +87,7 @@ namespace Controlinventarioissn.Controllers
                 {
                     if (dbUpdateException.InnerException.Message.Contains("duplicate"))
                     {
-                        ModelState.AddModelError(string.Empty, "Ya existe un producto con el mismo nombre.");
+                        ModelState.AddModelError(string.Empty, "Ya existe un equipamiento con el mismo nombre.");
                     }
                     else
                     {
