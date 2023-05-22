@@ -1,10 +1,11 @@
 ﻿using Controlinventarioissn.Data.Entities;
 using Controlinventarioissn.Migrations;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Controlinventarioissn.Data
 {
-    public class DataContext : DbContext
+    public class DataContext : IdentityDbContext<User> //hereda desde IdentityDbContext
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {

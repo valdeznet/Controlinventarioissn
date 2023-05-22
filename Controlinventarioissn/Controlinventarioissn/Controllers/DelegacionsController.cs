@@ -10,14 +10,17 @@ using Controlinventarioissn.Data.Entities;
 using System.Diagnostics.Metrics;
 using Controlinventarioissn.Models;
 using Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace Controlinventarioissn.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class DelegacionsController : Controller
     {
-        private readonly DataContext _context;
+        private readonly Data.DataContext _context;
 
-        public DelegacionsController(DataContext context)
+        public DelegacionsController(Data.DataContext context)
         {
             _context = context;
         }

@@ -1,5 +1,7 @@
 using Controlinventarioissn.Data;
+using Controlinventarioissn.Data.Entities;
 using Controlinventarioissn.Helpers;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,10 +15,22 @@ builder.Services.AddDbContext<DataContext>(o =>
 
 });
 
+builder.Services.AddIdentity<User, IdentityRole>(cfg =>
+{
+    cfg.User.RequireUniqueEmail = true; //mail unico
+    cfg.Password.RequireDigit = false; 
+    cfg.Password.RequiredUniqueChars = 0;
+    cfg.Password.RequireLowercase = false;
+    cfg.Password.RequireNonAlphanumeric = false;
+    cfg.Password.RequireUppercase = false;
+}).AddEntityFrameworkStores<DataContext>();
+
+
 builder.Services.AddTransient<SeedDb>();  //inyeccion addtransient es que la voy a usar una sola vez
-//builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
+builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 builder.Services.AddScoped<IBlobHelper, BlobHelper>();
 builder.Services.AddScoped<ICombosHelper, CombosHelper>();
+builder.Services.AddScoped<IUserHelper, UserHelper>();
 
 var app = builder.Build();
 SeedData();
@@ -45,10 +59,9 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-
 app.UseAuthorization();
+app.UseAuthentication(); //mi aplicacion va usar autenticacion de usuario y password
 
 app.MapControllerRoute(
     name: "default",

@@ -3,18 +3,21 @@ using Controlinventarioissn.Data.Entities;
 using Controlinventarioissn.Helpers;
 using Controlinventarioissn.Migrations;
 using Controlinventarioissn.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace Controlinventarioissn.Controllers
 {
+    //[Authorize(Roles = "Admin")]
     public class EquipamientoController : Controller
     {
-        private readonly DataContext _context;
+        private readonly Data.DataContext _context;
         private readonly ICombosHelper _combosHelper;
         private readonly IBlobHelper _blobHelper;
 
-        public EquipamientoController(DataContext context, ICombosHelper combosHelper, IBlobHelper blobHelper)
+        public EquipamientoController(Data.DataContext context, ICombosHelper combosHelper, IBlobHelper blobHelper)
         {
             _context = context;
             _combosHelper = combosHelper;

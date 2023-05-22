@@ -8,8 +8,8 @@ namespace Controlinventarioissn.Helpers
 {
 	public class CombosHelper : ICombosHelper
 	{
-		private readonly DataContext _context;
-		public CombosHelper(DataContext context)
+		private readonly Data.DataContext _context;
+		public CombosHelper(Data.DataContext context)
 		{
 			_context = context;
 		}

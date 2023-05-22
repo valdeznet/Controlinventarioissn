@@ -1,15 +1,18 @@
 ﻿using Controlinventarioissn.Data;
 using Controlinventarioissn.Data.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace Controlinventarioissn.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class CategoriesController : Controller //con esto tenemos acceso a la base de datos
     {
-        private readonly DataContext _context;
+        private readonly Data.DataContext _context;
 
-        public CategoriesController(DataContext context)
+        public CategoriesController(Data.DataContext context)
         {
             _context = context;
         }

@@ -13,5 +13,7 @@ namespace Controlinventarioissn.Data.Entities
 
         public Delegacion Delegacion { get; set; } //relacion de uno a varios
 
+        public ICollection<User> Users { get; set; }
+
     }
 }

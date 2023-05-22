@@ -27,6 +27,8 @@
                         <li class="nav-item">
                             <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Privacy">Políticas</a>
                         </li>
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                        {
                         <li class="nav-item">
                             <a class="nav-link text-white" asp-area="" asp-controller="Delegacions" asp-action="Index">Delegaciones</a>
                         </li>
@@ -39,8 +41,28 @@
                         <li class="nav-item">
                             <a class="nav-link text-white" asp-area="" asp-controller="Deposito" asp-action="Index">Depositos</a>
                         </li>
+                        }
+                        
                         
                     </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="ChangeUser">@User.Identity.Name</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">Cerrar Sesión</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Iniciar Sesión</a>
+                            </li>
+                        }
+                    </ul>
+
                 </div>
             </div>
         </nav>
