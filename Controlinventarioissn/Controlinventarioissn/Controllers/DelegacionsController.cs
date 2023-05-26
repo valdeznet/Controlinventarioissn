@@ -15,7 +15,7 @@ using System.Data;
 
 namespace Controlinventarioissn.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public class DelegacionsController : Controller
     {
         private readonly Data.DataContext _context;

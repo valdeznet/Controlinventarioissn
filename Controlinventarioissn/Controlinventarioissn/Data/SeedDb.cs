@@ -1,6 +1,8 @@
 ﻿using Controlinventarioissn.Data.Entities;
 using Controlinventarioissn.Enums;
 using Controlinventarioissn.Helpers;
+using Controlinventarioissn.Migrations;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.Metrics;
 
 namespace Controlinventarioissn.Data
@@ -23,10 +25,46 @@ namespace Controlinventarioissn.Data
             await _context.Database.EnsureCreatedAsync();
             await CheckCategoriesAsync();
             await CheckDepositosAsync();
+            await CheckEquipamientosAsync();
             await CheckDelegacionesAsync();
             await CheckRolesAsync();
-            await CheckUserAsync("1010", "Pablo", "Valdez", "valdeznet@gmail.com", "29950000", "Minas", UserType.Admin);
-            await CheckUserAsync("2020", "Flavia", "Jordi", "tecnokraal@gmail.com", "29950000", "Minas", UserType.User);
+            await CheckUserAsync("1010", "Pablo", "Valdez", "valdeznet@gmail.com", "29950000", "Minas", "Pablo.jpg", UserType.Admin);
+            //await CheckUserAsync("2020", "Flavia", "Jordi", "tecnokraal@gmail.com", "29950000", "Minas", UserType.User);
+        }
+        private async Task CheckEquipamientosAsync()
+        {
+            if (!_context.Equipamientos.Any())
+            {
+                await AddEquipamientoAsync("Auricular Gamer", 1212, 12F, new List<string>() { "Tecnologia" }, new List<string>() { "Auricular Gamer.png" });
+                await _context.SaveChangesAsync();
+            }
+
+        }
+
+        private async Task AddEquipamientoAsync(string name, int numerorfid, float stock, List<string> categories, List<string> images)
+        {
+            Equipamiento equipamiento = new()
+            {
+                Description = name,
+                Name = name,
+                NumeroRfid = numerorfid,
+                Stock = stock,
+                EquipamientoCategories = new List<EquipamientoCategory>(),
+                EquipamientoImages = new List<EquipamientoImage>()
+            };
+
+            foreach (string? category in categories)
+            {
+                equipamiento.EquipamientoCategories.Add(new EquipamientoCategory { Category = await _context.Categories.FirstOrDefaultAsync(c => c.Name == category) });
+            }
+
+            foreach (string? image in images)
+            {
+                Guid imageId = await _blobHelper.UploadBlobAsync($"{Environment.CurrentDirectory}\\wwwroot\\images\\products\\{image}", "products");
+                equipamiento.EquipamientoImages.Add(new EquipamientoImage { ImageId = imageId });
+            }
+
+            _context.Equipamientos.Add(equipamiento);
         }
 
         private async Task<User> CheckUserAsync(
@@ -36,12 +74,13 @@ namespace Controlinventarioissn.Data
      string email,
      string phone,
      string address,
+     string image,
      UserType userType)
         {
             User user = await _userHelper.GetUserAsync(email);
             if (user == null)
             {
-     //           Guid imageId = await _blobHelper.UploadBlobAsync($"{Environment.CurrentDirectory}\\wwwroot\\images\\users\\{image}", "users");
+                Guid imageId = await _blobHelper.UploadBlobAsync($"{Environment.CurrentDirectory}\\wwwroot\\images\\users\\{image}", "users");
 
                 user = new User
                 {
@@ -54,7 +93,7 @@ namespace Controlinventarioissn.Data
                     Document = document,
                     sector = _context.Sectors.FirstOrDefault(),
                     UserType = userType,
-       //             ImageId = imageId
+                    ImageId = imageId
                 };
 
                 await _userHelper.AddUserAsync(user, "123456");

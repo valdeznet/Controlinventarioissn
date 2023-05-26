@@ -25,6 +25,12 @@ builder.Services.AddIdentity<User, IdentityRole>(cfg =>
     cfg.Password.RequireUppercase = false;
 }).AddEntityFrameworkStores<DataContext>();
 
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Account/NotAuthorized";
+    options.AccessDeniedPath = "/Account/NotAuthorized";
+});
+
 
 builder.Services.AddTransient<SeedDb>();  //inyeccion addtransient es que la voy a usar una sola vez
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
@@ -62,7 +68,7 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthorization();
 app.UseAuthentication(); //mi aplicacion va usar autenticacion de usuario y password
-
+app.UseStatusCodePagesWithReExecute("/error/{0}");
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

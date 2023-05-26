@@ -7,7 +7,7 @@ using System.Data;
 
 namespace Controlinventarioissn.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public class DepositoController : Controller
     {
         private readonly Data.DataContext _context;
