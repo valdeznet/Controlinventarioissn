@@ -18,11 +18,10 @@ namespace Controlinventarioissn.Data.Entities
         [MaxLength(500, ErrorMessage = "El campo {0} debe tener máximo {1} caractéres.")]
         public string Description { get; set; }
 
-        [Column(TypeName = "decimal(18,2)")]
-        [DisplayFormat(DataFormatString = "{0:C2}")]
         [Display(Name = "NumeroRfid")]
+        [MaxLength(50, ErrorMessage = "El campo {0} debe tener máximo {1} caractéres.")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
-        public decimal NumeroRfid { get; set; }
+        public string NumeroRfid { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:N2}")]
         [Display(Name = "Inventario")]

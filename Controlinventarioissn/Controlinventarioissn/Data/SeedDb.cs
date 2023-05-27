@@ -37,13 +37,13 @@ namespace Controlinventarioissn.Data
             {
               //await AddEquipamientoAsync("Auricular Gamer", "452255", 12F, new List<string>() { "Tecnologia" }, new List<string>() { "Auricular Gamer.png" });
               //  await AddEquipamientoAsync("Servidor", 4555M, 12F, new List<string>() { "Tecnologia" }, new List<string>() { "Servidor.jpg" });
-                await AddEquipamientoAsync("Auricular Gamer", 980000M, 12F, new List<string>() { "Tecnología" }, new List<string>() { "Auricular Gamer.png" });
+                await AddEquipamientoAsync("Auricular Gamer", "WER34", 12F, new List<string>() { "Tecnología" }, new List<string>() { "Auricular Gamer.png" });
                 await _context.SaveChangesAsync();
             }
 
         }
 
-        private async Task AddEquipamientoAsync(string name, decimal NumeroRfid, float stock, List<string> categories, List<string> images)
+        private async Task AddEquipamientoAsync(string name, string NumeroRfid, float stock, List<string> categories, List<string> images)
         {
             Equipamiento equipamiento = new()
             {
