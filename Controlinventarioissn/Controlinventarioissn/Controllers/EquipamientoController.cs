@@ -126,19 +126,19 @@ namespace Controlinventarioissn.Controllers
                 return NotFound();
             }
 
-            Equipamiento product = await _context.Equipamientos.FindAsync(id);
-            if (product == null)
+            Equipamiento equipamiento = await _context.Equipamientos.FindAsync(id);
+            if (equipamiento == null)
             {
                 return NotFound();
             }
 
             EditEquipamientoViewModel model = new()
             {
-                Description = product.Description,
-                Id = product.Id,
-                Name = product.Name,
-                NumeroRfid = product.NumeroRfid,
-                Stock = product.Stock,
+                Description = equipamiento.Description,
+                Id = equipamiento.Id,
+                Name = equipamiento.Name,
+                NumeroRfid = equipamiento.NumeroRfid,
+                Stock = equipamiento.Stock,
             };
 
             return View(model);

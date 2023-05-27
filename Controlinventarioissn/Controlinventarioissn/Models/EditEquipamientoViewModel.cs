@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Controlinventarioissn.Models
 {
@@ -17,11 +16,10 @@ namespace Controlinventarioissn.Models
             [Required(ErrorMessage = "El campo {0} es obligatorio.")]
             public string Description { get; set; }
 
-       // Column(TypeName = "entero(18,2)")]
         [DisplayFormat(DataFormatString = "{0:C2}")]
         [Display(Name = "NumeroRfid")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
-        public int NumeroRfid { get; set; }
+        public decimal NumeroRfid { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:N2}")]
             [Display(Name = "Inventario")]

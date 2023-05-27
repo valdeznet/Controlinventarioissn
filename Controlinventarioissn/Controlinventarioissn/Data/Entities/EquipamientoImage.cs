@@ -15,7 +15,7 @@ namespace Controlinventarioissn.Data.Entities
         [Display(Name = "Foto")]
         public string ImageFullPath => ImageId == Guid.Empty
             ? $"https://localhost:7176/images/noimage.png"
-            : $"https://Controlinventarioissn.blob.core.windows.net/products/{ImageId}";
+            : $"https://controlinventarioissn.blob.core.windows.net/equipamientos/{ImageId}";
 
     }
 }

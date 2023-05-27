@@ -28,26 +28,28 @@ namespace Controlinventarioissn.Data
             await CheckEquipamientosAsync();
             await CheckDelegacionesAsync();
             await CheckRolesAsync();
-            await CheckUserAsync("1010", "Pablo", "Valdez", "valdeznet@gmail.com", "29950000", "Minas", "Pablo.jpg", UserType.Admin);
+            await CheckUserAsync("1010", "Pablo", "Valdez", "valdeznet@gmail.com", "29950000", "Minas", "Pablo.png", UserType.Admin);
             //await CheckUserAsync("2020", "Flavia", "Jordi", "tecnokraal@gmail.com", "29950000", "Minas", UserType.User);
         }
         private async Task CheckEquipamientosAsync()
         {
             if (!_context.Equipamientos.Any())
             {
-                await AddEquipamientoAsync("Auricular Gamer", 1212, 12F, new List<string>() { "Tecnologia" }, new List<string>() { "Auricular Gamer.png" });
+              //await AddEquipamientoAsync("Auricular Gamer", "452255", 12F, new List<string>() { "Tecnologia" }, new List<string>() { "Auricular Gamer.png" });
+              //  await AddEquipamientoAsync("Servidor", 4555M, 12F, new List<string>() { "Tecnologia" }, new List<string>() { "Servidor.jpg" });
+                await AddEquipamientoAsync("Auricular Gamer", 980000M, 12F, new List<string>() { "Tecnología" }, new List<string>() { "Auricular Gamer.png" });
                 await _context.SaveChangesAsync();
             }
 
         }
 
-        private async Task AddEquipamientoAsync(string name, int numerorfid, float stock, List<string> categories, List<string> images)
+        private async Task AddEquipamientoAsync(string name, decimal NumeroRfid, float stock, List<string> categories, List<string> images)
         {
             Equipamiento equipamiento = new()
             {
                 Description = name,
                 Name = name,
-                NumeroRfid = numerorfid,
+                NumeroRfid = NumeroRfid,
                 Stock = stock,
                 EquipamientoCategories = new List<EquipamientoCategory>(),
                 EquipamientoImages = new List<EquipamientoImage>()
@@ -60,7 +62,7 @@ namespace Controlinventarioissn.Data
 
             foreach (string? image in images)
             {
-                Guid imageId = await _blobHelper.UploadBlobAsync($"{Environment.CurrentDirectory}\\wwwroot\\images\\products\\{image}", "products");
+                Guid imageId = await _blobHelper.UploadBlobAsync($"{Environment.CurrentDirectory}\\wwwroot\\images\\equipamientos\\{image}", "equipamientos");
                 equipamiento.EquipamientoImages.Add(new EquipamientoImage { ImageId = imageId });
             }
 
